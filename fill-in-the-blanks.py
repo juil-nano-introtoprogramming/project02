@@ -1,4 +1,3 @@
-# by Juil Yoon
 """ Fill in The Blanks Quiz.
 
 Asks the user for difficulty level and number of trys, and displays an approprate quiz. The quiz has numbered blanks, asks the user for their answers for each until the quiz is complete or they make the maximum number of mistakes.
@@ -9,6 +8,7 @@ Example:
         $ python tests/fill-in-the-blanks.pyc
 """
 
+#TODO: Move global variables to __main__
 quizes = {'easy':
 """The capital city of the United States of America
 is ___1___. The current president of the USA is ___2___.
