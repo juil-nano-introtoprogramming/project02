@@ -9,9 +9,51 @@
     <script src="http://www.skulpt.org/static/skulpt-stdlib.js" type="text/javascript"></script>
   </head>
   <body>
+    <script type="text/javascript">
+    // https://gist.github.com/bnmnetp/4650616
+    // output functions are configurable.  This one just appends some text
+    // to a pre element.
+    function outf(text) {
+        var mypre = document.getElementById("output");
+        mypre.innerHTML = mypre.innerHTML + text;
+    }
+    function builtinRead(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+                throw "File not found: '" + x + "'";
+        return Sk.builtinFiles["files"][x];
+    }
+    // Here's everything you need to run a python program in skulpt
+    // grab the code from your textarea
+    // get a reference to your pre element for output
+    // configure the output function
+    // call Sk.importMainWithBody()
+    function runit() {
+       var prog = document.getElementById("code").value;
+       var mypre = document.getElementById("output");
+       mypre.innerHTML = '';
+       Sk.pre = "output";
+       Sk.configure({output:outf, read:builtinRead});
+       (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
+       var myPromise = Sk.misceval.asyncToPromise(function() {
+           return Sk.importMainWithBody("<stdin>", false, prog, true);
+       });
+       myPromise.then(function(mod) {
+           console.log('success');
+       },
+           function(err) {
+           console.log(err.toString());
+       });
+    }
+    </script>
     <main role="main">
       <h1>Fill in The Blanks</h1>
       <div id="subtitle"></div>
+      <form>
+        <textarea id="code" cols="40" rows="10">
+        print 'hello world'
+        </textarea><br />
+        <button type="button" onclick="runit()">Run</button>
+      </form>
     </main>
   </body>
 </html>
